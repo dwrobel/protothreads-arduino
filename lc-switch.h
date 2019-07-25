@@ -57,6 +57,12 @@
 #ifndef __LC_SWITCH_H__
 #define __LC_SWITCH_H__
 
+#if defined(__GNUC__) && __GNUC__ >= 7
+#define LC_FALL_THROUGH __attribute__((fallthrough))
+#else
+#define LC_FALL_THROUGH
+#endif /* __GNUC__ >= 7 */
+
 /* WARNING! lc implementation using switch() does not work if an
    LC_SET() is done within another switch() statement! */
 
@@ -67,7 +73,7 @@ typedef unsigned short lc_t;
 
 #define LC_RESUME(s) switch(s) { case 0:
 
-#define LC_SET(s) s = __LINE__; case __LINE__:
+#define LC_SET(s) s = __LINE__; LC_FALL_THROUGH; /*@fallthrough@*/ case __LINE__:
 
 #define LC_END(s) }
 
